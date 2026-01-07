@@ -2,64 +2,322 @@
 <html lang="ar" dir="rtl">
 <head>
     <!-- Favicon -->
-<link rel="icon" href="amstor.png" type="image/png">
-<link rel="apple-touch-icon" href="amstor.png">
-    <!-- Open Graph -->
-<meta property="og:title" content="AM Store | الحقائب الرجالية الأنيقة">
-<meta property="og:description" content="تسوق أفضل الحقائب الرجالية بأناقة وجودة عالية في الجزائر">
-<meta property="og:image" content="https://mrparly4-ship-it.github.io/amstore/Amstore.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://mrparly4-ship-it.github.io/amstore/">
-<meta property="og:type" content="website">
-    <!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AM Store">
-<meta name="twitter:description" content="الحقائب الرجالية الأنيقة والعملية">
-<meta name="twitter:image" content="https://mrparly4-ship-it.github.io/amstore/Amstore.png">
-    <meta name="description" content="AMstoreDZ – متجر ساعات فاخرة بتوصيل سريع لجميع ولايات الجزائر.">
-<meta name="keywords" content="ساعات, ساعات فاخرة, AMstoreDZ, توصيل سريع الجزائر">
-<meta name="robots" content="index, follow">
+    <link rel="icon" href="amstor.png" type="image/png">
+    <link rel="apple-touch-icon" href="amstor.png">
+    <!-- Meta Tags & Open Graph -->
+    <meta property="og:title" content="AM Store | الحقائب الرجالية الأنيقة">
+    <meta property="og:description" content="تسوق أفضل الحقائب الرجالية بأناقة جودة عالية في الجزائر">
+    <meta property="og:image" content="https://mrparly4-ship-it.github.io/amstore/Amstore.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر الساعات الفاخرة | Luxury Watch DZ</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth-compat.js"></script>
+
     <style>
         body { 
             font-family: 'Cairo', sans-serif; 
-            /* خلفية مميزة بتدرج ناعم ونمط هندسي خفيف */
             background-color: #f8fafc;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(202, 138, 4, 0.05) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(202, 138, 4, 0.05) 0px, transparent 50%);
+            background-image: radial-gradient(at 0% 0%, rgba(202, 138, 4, 0.05) 0px, transparent 50%);
             background-attachment: fixed;
         }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .hero-bg { background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1974&auto=format&fit=crop'); background-size: cover; background-position: center; border-radius: 0 0 50px 50px; }
+        .product-card { transition: transform 0.3s ease; }
+        .product-card:hover { transform: translateY(-10px); }
+    </style>
+</head>
+<body class="text-gray-900 overflow-x-hidden">
 
-        /* دوائر جمالية عائمة في الخلفية */
-        .bg-shape {
-            position: fixed;
-            z-index: -1;
-            filter: blur(80px);
-            border-radius: 50%;
-            opacity: 0.4;
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-white/20">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div onclick="handleLogoClick(event)" class="flex items-center gap-3 cursor-pointer group">
+                <img src="https://i.ibb.co/Mx1V8NMQ/logo.png" alt="AMstore Logo" class="h-14 w-14 object-contain">
+                <div>
+                    <span class="text-xl font-bold block">AMstore<span class="text-yellow-600">DZ</span></span>
+                </div>
+            </div>
+            <button onclick="showAdminLogin()" class="text-xs bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200">الإدارة</button>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="container mx-auto px-4 mt-6">
+        <div class="hero-bg text-white flex items-center justify-center text-center px-4 py-20 shadow-2xl">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">أناقتك تبدأ من <span class="text-yellow-500">هنا</span></h1>
+                <p class="text-gray-200 text-lg mb-10">اكتشف مجموعتنا الحصرية المحدثة سحابياً.</p>
+                <a href="#products" class="bg-yellow-600 hover:bg-yellow-700 text-white px-10 py-4 rounded-2xl font-bold transition-all">استعرض المنتجات</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <main id="products" class="container mx-auto px-4 py-20">
+        <div id="loading-spinner" class="flex justify-center py-20">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-600"></div>
+        </div>
+        <div id="products-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 hidden"></div>
+    </main>
+
+    <!-- Admin Panel -->
+    <div id="admin-login" class="fixed inset-0 bg-black/60 hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full">
+            <h3 class="text-xl font-bold mb-6 text-center">دخول الإدارة</h3>
+            <input type="password" id="admin-password" placeholder="كلمة المرور" class="w-full p-4 border rounded-2xl mb-6 text-center">
+            <div class="flex gap-3">
+                <button onclick="checkPassword()" class="flex-1 bg-yellow-600 text-white py-3 rounded-2xl">دخول</button>
+                <button onclick="hideAdminLogin()" class="flex-1 bg-gray-100 py-3 rounded-2xl">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="fixed inset-0 bg-gray-50 hidden z-[110] overflow-y-auto p-4 md:p-10 text-right">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex justify-between items-center mb-10 bg-white p-6 rounded-3xl shadow-sm">
+                <h2 class="text-2xl font-bold">لوحة التحكم</h2>
+                <button onclick="logoutAdmin()" class="bg-red-500 text-white px-6 py-2 rounded-xl">خروج</button>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-sm">
+                    <h3 class="font-bold mb-4">إضافة منتج</h3>
+                    <div class="space-y-4">
+                        <input type="text" id="p-name" placeholder="الاسم" class="w-full p-3 border rounded-xl">
+                        <input type="number" id="p-price" placeholder="السعر" class="w-full p-3 border rounded-xl">
+                        <input type="text" id="p-image" placeholder="رابط الصورة" class="w-full p-3 border rounded-xl">
+                        <textarea id="p-desc" placeholder="الوصف" class="w-full p-3 border rounded-xl h-24"></textarea>
+                        <button onclick="addProductToCloud()" class="w-full bg-yellow-600 text-white py-4 rounded-xl font-bold">نشر</button>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm">
+                    <h3 class="font-bold mb-4">الإعدادات</h3>
+                    <input type="text" id="tg-token" placeholder="Telegram Bot Token" class="w-full p-3 border rounded-xl mb-4">
+                    <input type="text" id="tg-chatid" placeholder="Telegram Chat ID" class="w-full p-3 border rounded-xl mb-4">
+                    <button onclick="saveSettingsToCloud()" class="w-full bg-blue-600 text-white py-3 rounded-xl mb-6">حفظ</button>
+                    <div id="admin-product-list" class="space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-[40px] max-w-4xl w-full max-h-[90vh] overflow-y-auto relative p-8">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-2xl">&times;</button>
+            <div id="modal-content" class="grid md:grid-cols-2 gap-10 text-right"></div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = JSON.parse(__firebase_config);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'amstore-default';
+
+        // المسارات المحسنة والمتوافقة مع القواعد الصارمة (6 أجزاء للمستندات)
+        const CONFIG_DOC_PATH = `artifacts/${appId}/public/data/config/settings`;
+        const PRODUCTS_COL_PATH = `artifacts/${appId}/public/data/products`;
+
+        const ADMIN_PASS = "mohabd12";
+        let products = [];
+        let settings = { token: '', chatid: '' };
+
+        async function init() {
+            try {
+                // Rule 3: Auth First
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await auth.signInWithCustomToken(__initial_auth_token);
+                } else {
+                    await auth.signInAnonymously();
+                }
+
+                // ننتظر حتى نتأكد من وجود مستخدم مسجل الدخول قبل الاستعلام
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        startListening();
+                    } else {
+                        console.error("Authentication failed.");
+                    }
+                });
+
+            } catch (e) { 
+                console.error("Init Error:", e);
+            }
         }
 
-        .color-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.1); transition: 0.3s; }
-        .color-dot.active { border-color: #ca8a04; transform: scale(1.2); box-shadow: 0 0 15px rgba(202, 138, 4, 0.3); }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        function startListening() {
+            // الاستماع للمنتجات
+            db.collection(PRODUCTS_COL_PATH).onSnapshot(snapshot => {
+                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProducts();
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('products-list').classList.remove('hidden');
+            }, err => {
+                console.error("خطأ في جلب المنتجات (Permissions):", err);
+                document.getElementById('loading-spinner').innerHTML = `<p class="text-red-500 text-center">خطأ في الاتصال بقاعدة البيانات</p>`;
+            });
+
+            // الاستماع للإعدادات
+            db.doc(CONFIG_DOC_PATH).onSnapshot(doc => {
+                if(doc.exists) {
+                    settings = doc.data();
+                    document.getElementById('tg-token').value = settings.token || '';
+                    document.getElementById('tg-chatid').value = settings.chatid || '';
+                }
+            }, err => {
+                console.warn("إعدادات البوت غير موجودة أو الصلاحيات محدودة حالياً.");
+            });
         }
 
-        .hero-bg {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                              url('https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1974&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+        function renderProducts() {
+            const list = document.getElementById('products-list');
+            const adminList = document.getElementById('admin-product-list');
+            
+            list.innerHTML = products.map(p => `
+                <div class="glass-card product-card rounded-[40px] overflow-hidden group border border-gray-100">
+                    <div class="h-64 overflow-hidden">
+                        <img src="${p.img || 'https://via.placeholder.com/400x400?text=No+Image'}" 
+                             onclick="openProduct('${p.id}')" 
+                             class="w-full h-full object-cover cursor-pointer hover:scale-105 transition"
+                             onerror="this.src='https://via.placeholder.com/400x400?text=Error'">
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold text-lg mb-2">${p.name}</h3>
+                        <div class="text-yellow-700 font-black mb-4">${p.price} دج</div>
+                        <button onclick="openProduct('${p.id}')" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-black transition">طلب المنتج</button>
+                    </div>
+                </div>
+            `).join('');
+
+            adminList.innerHTML = products.map(p => `
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg text-sm border">
+                    <span>${p.name}</span>
+                    <button onclick="deleteProductFromCloud('${p.id}')" class="text-red-500 font-bold px-2">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        async function addProductToCloud() {
+            if (!auth.currentUser) return alert("يجب تسجيل الدخول أولاً");
+            const name = document.getElementById('p-name').value;
+            const price = document.getElementById('p-price').value;
+            const img = document.getElementById('p-image').value;
+            const desc = document.getElementById('p-desc').value;
+
+            if(!name || !price) return alert("يرجى إكمال البيانات الأساسية");
+
+            try {
+                await db.collection(PRODUCTS_COL_PATH).add({
+                    name, 
+                    price: parseInt(price), 
+                    img, 
+                    desc,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert("تمت الإضافة بنجاح");
+                // Clear fields
+                document.getElementById('p-name').value = '';
+                document.getElementById('p-price').value = '';
+            } catch (err) {
+                alert("فشل في الإضافة: " + err.message);
+            }
+        }
+
+        async function deleteProductFromCloud(id) {
+            if (!auth.currentUser) return;
+            if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+                try {
+                    await db.collection(PRODUCTS_COL_PATH).doc(id).delete();
+                } catch (err) {
+                    alert("فشل في الحذف: " + err.message);
+                }
+            }
+        }
+
+        async function saveSettingsToCloud() {
+            if (!auth.currentUser) return;
+            const token = document.getElementById('tg-token').value;
+            const chatid = document.getElementById('tg-chatid').value;
+            try {
+                await db.doc(CONFIG_DOC_PATH).set({ token, chatid }, { merge: true });
+                alert("تم حفظ إعدادات البوت");
+            } catch (err) {
+                alert("فشل حفظ الإعدادات: " + err.message);
+            }
+        }
+
+        function openProduct(id) {
+            const p = products.find(x => x.id === id);
+            const content = document.getElementById('modal-content');
+            content.innerHTML = `
+                <img src="${p.img || 'https://via.placeholder.com/400x400'}" class="w-full rounded-2xl shadow-lg">
+                <div>
+                    <h2 class="text-2xl font-bold mb-4">${p.name}</h2>
+                    <p class="text-gray-600 mb-6">${p.desc || 'لا يوجد وصف متاح.'}</p>
+                    <p class="text-yellow-700 text-xl font-bold mb-6">${p.price} دج</p>
+                    <form onsubmit="confirmOrder(event, '${p.id}')" class="space-y-4">
+                        <input type="text" id="u-name" required placeholder="الاسم الكامل" class="w-full p-4 bg-gray-100 rounded-xl border-none outline-yellow-600">
+                        <input type="tel" id="u-phone" required placeholder="رقم الهاتف (الجزائر)" class="w-full p-4 bg-gray-100 rounded-xl border-none outline-yellow-600">
+                        <button type="submit" id="orderBtn" class="w-full bg-yellow-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-yellow-700 transition">إرسال الطلب الآن</button>
+                    </form>
+                </div>
+            `;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        async function confirmOrder(e, pid) {
+            e.preventDefault();
+            const btn = document.getElementById('orderBtn');
+            btn.disabled = true;
+            btn.innerHTML = "جاري الإرسال...";
+
+            const p = products.find(x => x.id === pid);
+            const name = document.getElementById('u-name').value;
+            const phone = document.getElementById('u-phone').value;
+            
+            const msg = `🛍️ *طلب جديد من المتجر*:\n\n` +
+                        `📦 *المنتج:* ${p.name}\n` +
+                        `💰 *السعر:* ${p.price} دج\n\n` +
+                        `👤 *العميل:* ${name}\n` +
+                        `📞 *الهاتف:* ${phone}`;
+            
+            if(!settings.token || !settings.chatid) {
+                btn.disabled = false;
+                btn.innerHTML = "تأكيد الطلب";
+                return alert("خطأ: إعدادات البوت غير مكتملة في لوحة التحكم.");
+            }
+
+            try {
+                await fetch(`https://api.telegram.org/bot${settings.token}/sendMessage?chat_id=${settings.chatid}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+                alert("تم استلام طلبك بنجاح! سنتصل بك قريباً.");
+                closeModal();
+            } catch (err) { 
+                alert("عذراً، حدث خطأ أثناء إرسال الطلب. حاول مجدداً."); 
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function showAdminLogin() { document.getElementById('admin-login').classList.remove('hidden'); }
+        function hideAdminLogin() { document.getElementById('admin-login').classList.add('hidden'); }
+        function checkPassword() { if(document.getElementById('admin-password').value === ADMIN_PASS) { hideAdminLogin(); document.getElementById('admin-panel').classList.remove('hidden'); } else { alert("كلمة المرور خاطئة"); } }
+        function logoutAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+        let lClicks = 0; function handleLogoClick(e) { if(Date.now() - lClicks < 400) showAdminLogin(); lClicks = Date.now(); }
+
+        init();
+    </script>
+</body>
+</html>
             border-radius: 0 0 50px 50px;
         }
 
@@ -458,6 +716,7 @@
 </body>
 
 </html>
+
 
 
 
