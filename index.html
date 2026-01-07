@@ -2,169 +2,79 @@
 <html lang="ar" dir="rtl">
 <head>
     <!-- Favicon -->
-<link rel="icon" href="amstor.png" type="image/png">
-<link rel="apple-touch-icon" href="amstor.png">
-    <!-- Open Graph -->
-<meta property="og:title" content="AM Store | الحقائب الرجالية الأنيقة">
-<meta property="og:description" content="تسوق أفضل الحقائب الرجالية بأناقة وجودة عالية في الجزائر">
-<meta property="og:image" content="https://mrparly4-ship-it.github.io/amstore/Amstore.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://mrparly4-ship-it.github.io/amstore/">
-<meta property="og:type" content="website">
-    <!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AM Store">
-<meta name="twitter:description" content="الحقائب الرجالية الأنيقة والعملية">
-<meta name="twitter:image" content="https://mrparly4-ship-it.github.io/amstore/Amstore.png">
-    <meta name="description" content="AMstoreDZ – متجر ساعات فاخرة بتوصيل سريع لجميع ولايات الجزائر.">
-<meta name="keywords" content="ساعات, ساعات فاخرة, AMstoreDZ, توصيل سريع الجزائر">
-<meta name="robots" content="index, follow">
+    <link rel="icon" href="amstor.png" type="image/png">
+    <link rel="apple-touch-icon" href="amstor.png">
+    <!-- Meta Tags & Open Graph -->
+    <meta property="og:title" content="AM Store | الحقائب الرجالية الأنيقة">
+    <meta property="og:description" content="تسوق أفضل الحقائب الرجالية بأناقة جودة عالية في الجزائر">
+    <meta property="og:image" content="https://mrparly4-ship-it.github.io/amstore/Amstore.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر الساعات الفاخرة | Luxury Watch DZ</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth-compat.js"></script>
+
     <style>
         body { 
             font-family: 'Cairo', sans-serif; 
-            /* خلفية مميزة بتدرج ناعم ونمط هندسي خفيف */
             background-color: #f8fafc;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(202, 138, 4, 0.05) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(202, 138, 4, 0.05) 0px, transparent 50%);
+            background-image: radial-gradient(at 0% 0%, rgba(202, 138, 4, 0.05) 0px, transparent 50%);
             background-attachment: fixed;
         }
-
-        /* دوائر جمالية عائمة في الخلفية */
-        .bg-shape {
-            position: fixed;
-            z-index: -1;
-            filter: blur(80px);
-            border-radius: 50%;
-            opacity: 0.4;
-        }
-
-        .color-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.1); transition: 0.3s; }
-        .color-dot.active { border-color: #ca8a04; transform: scale(1.2); box-shadow: 0 0 15px rgba(202, 138, 4, 0.3); }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-        }
-
-        .hero-bg {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                              url('https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1974&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            border-radius: 0 0 50px 50px;
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px);
-        }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #ca8a04; border-radius: 10px; }
-        
-        input, select, textarea {
-            background: rgba(255, 255, 255, 0.9) !important;
-        }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .hero-bg { background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1974&auto=format&fit=crop'); background-size: cover; background-position: center; border-radius: 0 0 50px 50px; }
+        .product-card { transition: transform 0.3s ease; }
+        .product-card:hover { transform: translateY(-10px); }
     </style>
 </head>
 <body class="text-gray-900 overflow-x-hidden">
 
-    <!-- Decorative background shapes -->
-    <div class="bg-shape w-96 h-96 bg-yellow-100 top-[-10%] left-[-10%]"></div>
-    <div class="bg-shape w-80 h-80 bg-blue-50 bottom-[-5%] right-[-5%]"></div>
-
     <!-- Header -->
-    <header class="sticky top-0 z-50 transition-all duration-300 bg-white/70 backdrop-blur-md border-b border-white/20">
+    <header class="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-white/20">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div onclick="handleLogoClick(event)" class="flex items-center gap-3 cursor-pointer select-none group">
-                  <div class="bg-white p-1.5 rounded-2xl shadow-lg group-active:scale-90 transition">
-                     <img 
-            src="https://i.ibb.co/Mx1V8NMQ/logo.png"
-            alt="AMstore Logo"
-            class="h-20 w-20 object-contain rounded-xl"
-        >
+            <div onclick="handleLogoClick(event)" class="flex items-center gap-3 cursor-pointer group">
+                <img src="https://i.ibb.co/Mx1V8NMQ/logo.png" alt="AMstore Logo" class="h-14 w-14 object-contain">
+                <div>
+                    <span class="text-xl font-bold block">AMstore<span class="text-yellow-600">DZ</span></span>
                 </div>
-                <span class="text-xl font-bold tracking-tight">
-    AMstore<span class="text-yellow-600">DZ</span>
-  </span>
-
-  <span class="mt-1 text-xs text-gray-500 flex items-center gap-1">
-    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-    توصيل سريع لـ 58 ولاية
-  </span>
-</div>
+            </div>
+            <button onclick="showAdminLogin()" class="text-xs bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200">الإدارة</button>
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="container mx-auto px-4 mt-6">
-        <div class="hero-bg text-white flex items-center justify-center text-center px-4 py-24 shadow-2xl overflow-hidden relative">
-            <div class="relative z-10 max-w-3xl mx-auto">
-                <span class="bg-yellow-600/30 backdrop-blur-md border border-yellow-500/50 text-yellow-400 px-4 py-1.5 rounded-full text-sm font-bold mb-6 inline-block">تشكيلة 2026 الجديدة</span>
-                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">أناقتك تبدأ من <br><span class="text-yellow-500">معصمك</span></h1>
-                <p class="text-gray-200 text-lg md:text-xl max-w-xl mx-auto mb-10 leading-relaxed">اكتشف مجموعتنا الحصرية من الساعات العالمية الفاخرة التي تجمع بين الدقة السويسرية والتصميم العصري.</p>
-                <a href="#products" class="bg-yellow-600 hover:bg-yellow-700 text-white px-10 py-4 rounded-2xl font-bold transition-all shadow-xl inline-block transform hover:scale-105 active:scale-95">استعرض المنتجات</a>
+        <div class="hero-bg text-white flex items-center justify-center text-center px-4 py-20 shadow-2xl">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">أناقتك تبدأ من <span class="text-yellow-500">هنا</span></h1>
+                <p class="text-gray-200 text-lg mb-10">اكتشف مجموعتنا الحصرية المحدثة سحابياً.</p>
+                <a href="#products" class="bg-yellow-600 hover:bg-yellow-700 text-white px-10 py-4 rounded-2xl font-bold transition-all">استعرض المنتجات</a>
             </div>
         </div>
     </section>
 
-    <!-- Categories / Features -->
-    <div class="container mx-auto px-4 mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="glass-card p-6 rounded-3xl text-center border-b-4 border-yellow-600">
-            <div class="text-3xl mb-2">🚚</div>
-            <div class="font-bold text-sm">توصيل منزلي</div>
-        </div>
-        <div class="glass-card p-6 rounded-3xl text-center border-b-4 border-yellow-600">
-            <div class="text-3xl mb-2">💎</div>
-            <div class="font-bold text-sm">جودة مضمونة</div>
-        </div>
-        <div class="glass-card p-6 rounded-3xl text-center border-b-4 border-yellow-600">
-            <div class="text-3xl mb-2">🤝</div>
-            <div class="font-bold text-sm">دفع عند الاستلام</div>
-        </div>
-        <div class="glass-card p-6 rounded-3xl text-center border-b-4 border-yellow-600">
-            <div class="text-3xl mb-2">🛡️</div>
-            <div class="font-bold text-sm">جودة عالية</div>
-        </div>
-    </div>
-
-    <!-- Products Grid -->
+    <!-- Products -->
     <main id="products" class="container mx-auto px-4 py-20">
-        <div class="flex flex-col items-center mb-16">
-            <h2 class="text-4xl font-bold mb-4">أحدث الموديلات</h2>
-            <div class="w-20 h-1.5 bg-yellow-600 rounded-full"></div>
+        <div id="loading-spinner" class="flex justify-center py-20">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-600"></div>
         </div>
-        <div id="products-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10"></div>
+        <div id="products-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 hidden"></div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-12 mt-20">
-        <div class="container mx-auto px-4 text-center">
-            <div class="text-2xl font-bold text-white mb-4">AM Store</div>
-            <p class="text-sm max-w-md mx-auto mb-8">نحن فخورون بتقديم أفضل خدمة بيع ساعات في الجزائر منذ 2025. فخامتك هي مهمتنا.</p>
-            <div class="border-t border-gray-800 pt-8 text-xs">
-                © 2026 جميع الحقوق محفوظة لمتجر ساعاتي DZ
-            </div>
-        </div>
-    </footer>
-
-    <!-- Admin Tools (Hidden) -->
-    <div id="admin-login" class="fixed inset-0 admin-modal hidden z-[100] flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full border border-gray-100">
-            <h3 class="text-xl font-bold mb-6 text-center">بوابة المسؤول</h3>
-            <input type="password" id="admin-password" placeholder="كلمة المرور" class="w-full p-4 border rounded-2xl mb-6 text-center outline-none focus:ring-2 focus:ring-yellow-600">
+    <!-- Admin Panel -->
+    <div id="admin-login" class="fixed inset-0 bg-black/60 hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full">
+            <h3 class="text-xl font-bold mb-6 text-center">دخول الإدارة</h3>
+            <input type="password" id="admin-password" placeholder="كلمة المرور" class="w-full p-4 border rounded-2xl mb-6 text-center">
             <div class="flex gap-3">
-                <button onclick="checkPassword()" class="flex-1 bg-yellow-600 text-white py-3 rounded-2xl font-bold">دخول</button>
-                <button onclick="hideAdminLogin()" class="flex-1 bg-gray-100 py-3 rounded-2xl font-bold">إلغاء</button>
+                <button onclick="checkPassword()" class="flex-1 bg-yellow-600 text-white py-3 rounded-2xl">دخول</button>
+                <button onclick="hideAdminLogin()" class="flex-1 bg-gray-100 py-3 rounded-2xl">إلغاء</button>
             </div>
         </div>
     </div>
@@ -172,35 +82,26 @@
     <div id="admin-panel" class="fixed inset-0 bg-gray-50 hidden z-[110] overflow-y-auto p-4 md:p-10 text-right">
         <div class="max-w-5xl mx-auto">
             <div class="flex justify-between items-center mb-10 bg-white p-6 rounded-3xl shadow-sm">
-                <h2 class="text-2xl font-bold">لوحة التحكم الإحترافية</h2>
-                <button onclick="logoutAdmin()" class="bg-red-500 text-white px-6 py-2 rounded-xl font-bold hover:bg-red-600">خروج</button>
+                <h2 class="text-2xl font-bold">لوحة التحكم</h2>
+                <button onclick="logoutAdmin()" class="bg-red-500 text-white px-6 py-2 rounded-xl">خروج</button>
             </div>
-
             <div class="grid lg:grid-cols-2 gap-8">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h3 class="text-lg font-bold mb-6 flex items-center gap-2"><span>➕</span> إضافة منتج جديد</h3>
+                <div class="bg-white p-8 rounded-3xl shadow-sm">
+                    <h3 class="font-bold mb-4">إضافة منتج</h3>
                     <div class="space-y-4">
-                        <input type="text" id="p-name" placeholder="اسم الساعة" class="w-full p-4 border rounded-2xl outline-none focus:ring-2 focus:ring-yellow-600">
-                        <input type="number" id="p-price" placeholder="السعر (دج)" class="w-full p-4 border rounded-2xl outline-none focus:ring-2 focus:ring-yellow-600">
-                        <input type="text" id="p-image" placeholder="رابط صورة الساعة" class="w-full p-4 border rounded-2xl outline-none focus:ring-2 focus:ring-yellow-600">
-                        <textarea id="p-desc" placeholder="وصف جذاب للمنتج..." class="w-full p-4 border rounded-2xl h-28 outline-none focus:ring-2 focus:ring-yellow-600"></textarea>
-                        <input type="text" id="p-colors" placeholder="الألوان المتاحة (مثال: #000, #C0C0C0)" class="w-full p-4 border rounded-2xl outline-none focus:ring-2 focus:ring-yellow-600">
-                        <button onclick="addProduct()" class="w-full bg-yellow-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-yellow-600/20">نشر في المتجر</button>
+                        <input type="text" id="p-name" placeholder="الاسم" class="w-full p-3 border rounded-xl">
+                        <input type="number" id="p-price" placeholder="السعر" class="w-full p-3 border rounded-xl">
+                        <input type="text" id="p-image" placeholder="رابط الصورة" class="w-full p-3 border rounded-xl">
+                        <textarea id="p-desc" placeholder="الوصف" class="w-full p-3 border rounded-xl h-24"></textarea>
+                        <button onclick="addProductToCloud()" class="w-full bg-yellow-600 text-white py-4 rounded-xl font-bold">نشر</button>
                     </div>
                 </div>
-
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                    <h3 class="text-lg font-bold mb-6 flex items-center gap-2"><span>⚙️</span> إعدادات الربط (تليجرام)</h3>
-                    <div class="space-y-4">
-                        <input type="text" id="tg-token" placeholder="Bot Token" class="w-full p-4 border rounded-2xl outline-none">
-                        <input type="text" id="tg-chatid" placeholder="Chat ID الرئيسي" class="w-full p-4 border rounded-2xl outline-none">
-                        <input type="text" id="tg-chatid2" placeholder="Chat ID إضافي (اختياري)" class="w-full p-4 border rounded-2xl outline-none">
-                        <button onclick="saveSettings()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold">حفظ التغييرات</button>
-                    </div>
-                    <div class="mt-10">
-                        <h3 class="font-bold mb-4 border-b pb-2">المنتجات المعروضة حالياً:</h3>
-                        <div id="admin-product-list" class="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto pr-2"></div>
-                    </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm">
+                    <h3 class="font-bold mb-4">الإعدادات</h3>
+                    <input type="text" id="tg-token" placeholder="Telegram Bot Token" class="w-full p-3 border rounded-xl mb-4">
+                    <input type="text" id="tg-chatid" placeholder="Telegram Chat ID" class="w-full p-3 border rounded-xl mb-4">
+                    <button onclick="saveSettingsToCloud()" class="w-full bg-blue-600 text-white py-3 rounded-xl mb-6">حفظ</button>
+                    <div id="admin-product-list" class="space-y-2"></div>
                 </div>
             </div>
         </div>
@@ -208,253 +109,212 @@
 
     <!-- Product Modal -->
     <div id="modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
-        <div class="bg-white/95 rounded-[40px] max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-white">
-            <button onclick="closeModal()" class="sticky top-4 right-4 z-20 float-left text-3xl font-bold bg-white/80 backdrop-blur shadow-lg w-12 h-12 rounded-2xl flex items-center justify-center hover:bg-yellow-600 hover:text-white transition-all">&times;</button>
-            <div id="modal-content" class="grid md:grid-cols-2 gap-10 p-8 md:p-12 text-right"></div>
+        <div class="bg-white rounded-[40px] max-w-4xl w-full max-h-[90vh] overflow-y-auto relative p-8">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-2xl">&times;</button>
+            <div id="modal-content" class="grid md:grid-cols-2 gap-10 text-right"></div>
         </div>
     </div>
 
-    <!-- Success Feedback -->
-    <div id="success-notif" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-10 py-5 rounded-[30px] shadow-2xl z-[200] border border-yellow-600 hidden text-center animate-bounce">
-        <p class="font-bold flex items-center gap-3"><span class="text-yellow-500 text-2xl">✔</span> تم استلام طلبك بنجاح! سنتصل بك.</p>
-    </div>
-
     <script>
-        const ADMIN_PASS = "mohabd12"; 
-        let products = JSON.parse(localStorage.getItem('watches_db')) || [
-            { id: 1, name: "Premium Gold Watch", price: 14500, img: "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&w=500", desc: "ساعة فاخرة بطلاء ذهبي مقاوم للصدأ، تعكس الرقي والتميز في كل تفاصيلها.", colors: ["#FFD700", "#000000"] },
-            { id: 2, name: "Silver Executive", price: 12800, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500", desc: "تصميم كلاسيكي من الفولاذ المقاوم للصدأ، مثالي لرجال الأعمال والمناسبات الرسمية.", colors: ["#C0C0C0", "#333333"] }
-        ];
-        let settings = JSON.parse(localStorage.getItem('tg_config')) || { token: '', chatid: '', chatid2: '' };
-        let selectedColor = "";
-        let currentDeliveryPrice = 0;
+        // Firebase Configuration
+        const firebaseConfig = JSON.parse(__firebase_config);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'amstore-default';
 
-        const WILAYAS_DATA = [
-            {name: "02-الشلف", price: 700}, {name: "03-الأغواط", price: 900}, {name: "04-أم البواقي", price: 750},
-            {name: "05-باتنة", price: 750}, {name: "06-بجاية", price: 750}, {name: "07-بسكرة", price: 850}, 
-            {name: "09-البليدة", price: 600}, {name: "10-البويرة", price: 700}, {name: "12-تبسة", price: 800},
-            {name: "13-تلمسان", price: 750}, {name: "14-تيارت", price: 750}, {name: "15-تيزي وزو", price: 700}, {name: "16-الجزائر", price: 450},
-            {name: "17-الجلفة", price: 850}, {name: "18-جيجل", price: 750}, {name: "19-سطيف", price: 700}, {name: "20-سعيدة", price: 800},
-            {name: "21-سكيكدة", price: 750}, {name: "22-سيدي بلعباس", price: 750}, {name: "23-عنابة", price: 750}, {name: "24-قالمة", price: 800},
-            {name: "25-قسنطينة", price: 700}, {name: "26-المدية", price: 700}, {name: "27-مستغانم", price: 750}, {name: "28-المسيلة", price: 750},
-            {name: "29-معسكر", price: 800}, {name: "30-ورقلة", price: 950}, {name: "31-وهران", price: 700}, {name: "32-البيض", price: 1000},
-            {name: "34-برج بوعريريج", price: 700}, {name: "35-بومرداس", price: 650}, {name: "36-الطارف", price: 850},
-            {name: "39-الوادي", price: 900}, {name: "40-خنشلة", price: 800},
-            {name: "41-سوق أهراس", price: 800}, {name: "42-تيبازة", price: 650}, {name: "43-ميلة", price: 750}, {name: "44-عين الدفلى", price: 700},
-            {name: "45-النعامة", price: 850}, {name: "46-عين تيموشنت", price: 750}, {name: "47-غرداية", price: 950}, {name: "48-غليزان", price: 750},
-            {name: "51-أولاد جلال", price: 950}, {name: "55-تقرت", price: 950},
-            {name: "57-المغير", price: 950}, {name: "58-المنيعة", price: 950}
-        ];
+        // المسارات المحسنة والمتوافقة مع القواعد الصارمة (6 أجزاء للمستندات)
+        const CONFIG_DOC_PATH = `artifacts/${appId}/public/data/config/settings`;
+        const PRODUCTS_COL_PATH = `artifacts/${appId}/public/data/products`;
 
-        let lastClick = 0;
-        function handleLogoClick(e) {
-            const now = new Date().getTime();
-            if (now - lastClick < 400) showAdminLogin();
-            lastClick = now;
+        const ADMIN_PASS = "mohabd12";
+        let products = [];
+        let settings = { token: '', chatid: '' };
+
+        async function init() {
+            try {
+                // Rule 3: Auth First
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await auth.signInWithCustomToken(__initial_auth_token);
+                } else {
+                    await auth.signInAnonymously();
+                }
+
+                // ننتظر حتى نتأكد من وجود مستخدم مسجل الدخول قبل الاستعلام
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        startListening();
+                    } else {
+                        console.error("Authentication failed.");
+                    }
+                });
+
+            } catch (e) { 
+                console.error("Init Error:", e);
+            }
+        }
+
+        function startListening() {
+            // الاستماع للمنتجات
+            db.collection(PRODUCTS_COL_PATH).onSnapshot(snapshot => {
+                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProducts();
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('products-list').classList.remove('hidden');
+            }, err => {
+                console.error("خطأ في جلب المنتجات (Permissions):", err);
+                document.getElementById('loading-spinner').innerHTML = `<p class="text-red-500 text-center">خطأ في الاتصال بقاعدة البيانات</p>`;
+            });
+
+            // الاستماع للإعدادات
+            db.doc(CONFIG_DOC_PATH).onSnapshot(doc => {
+                if(doc.exists) {
+                    settings = doc.data();
+                    document.getElementById('tg-token').value = settings.token || '';
+                    document.getElementById('tg-chatid').value = settings.chatid || '';
+                }
+            }, err => {
+                console.warn("إعدادات البوت غير موجودة أو الصلاحيات محدودة حالياً.");
+            });
         }
 
         function renderProducts() {
             const list = document.getElementById('products-list');
-            if(!list) return;
+            const adminList = document.getElementById('admin-product-list');
+            
             list.innerHTML = products.map(p => `
-                <div class="glass-card product-card rounded-[40px] overflow-hidden transition-all duration-500 group relative">
-                    <div class="overflow-hidden h-80 relative">
-                         <img src="${p.img}" onclick="openProduct(${p.id})" class="w-full h-full object-cover cursor-pointer group-hover:scale-110 transition duration-700">
-                         <div class="absolute top-4 right-4 bg-yellow-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">متوفر</div>
+                <div class="glass-card product-card rounded-[40px] overflow-hidden group border border-gray-100">
+                    <div class="h-64 overflow-hidden">
+                        <img src="${p.img || 'https://via.placeholder.com/400x400?text=No+Image'}" 
+                             onclick="openProduct('${p.id}')" 
+                             class="w-full h-full object-cover cursor-pointer hover:scale-105 transition"
+                             onerror="this.src='https://via.placeholder.com/400x400?text=Error'">
                     </div>
-                    <div class="p-8 text-center">
-                        <h3 class="text-xl font-bold mb-3 text-gray-800">${p.name}</h3>
-                        <div class="text-yellow-700 text-2xl font-black mb-6">${p.price} <span class="text-xs font-normal">دج</span></div>
-                        <button onclick="openProduct(${p.id})" class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold hover:bg-yellow-600 transition-all duration-300 shadow-xl shadow-gray-200">اطلبها الآن</button>
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold text-lg mb-2">${p.name}</h3>
+                        <div class="text-yellow-700 font-black mb-4">${p.price} دج</div>
+                        <button onclick="openProduct('${p.id}')" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-black transition">طلب المنتج</button>
                     </div>
                 </div>
             `).join('');
-            
-            const adminList = document.getElementById('admin-product-list');
-            if(adminList) {
-                adminList.innerHTML = products.map(p => `
-                    <div class="flex justify-between items-center bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                        <div class="flex items-center gap-3">
-                            <img src="${p.img}" class="w-10 h-10 rounded-lg object-cover">
-                            <span class="text-sm font-bold truncate max-w-[200px]">${p.name}</span>
-                        </div>
-                        <button onclick="deleteProduct(${p.id})" class="text-red-500 text-xs font-bold hover:underline">حذف المنتج</button>
-                    </div>
-                `).join('');
-            }
+
+            adminList.innerHTML = products.map(p => `
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg text-sm border">
+                    <span>${p.name}</span>
+                    <button onclick="deleteProductFromCloud('${p.id}')" class="text-red-500 font-bold px-2">حذف</button>
+                </div>
+            `).join('');
         }
 
-        function showAdminLogin() { document.getElementById('admin-login').classList.remove('hidden'); }
-        function hideAdminLogin() { document.getElementById('admin-login').classList.add('hidden'); }
-        
-        function checkPassword() {
-            if(document.getElementById('admin-password').value === ADMIN_PASS) {
-                hideAdminLogin();
-                document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('tg-token').value = settings.token || '';
-                document.getElementById('tg-chatid').value = settings.chatid || '';
-                document.getElementById('tg-chatid2').value = settings.chatid2 || '';
-            } else alert("كلمة المرور غير صحيحة!");
-        }
-
-        function logoutAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
-
-        function addProduct() {
+        async function addProductToCloud() {
+            if (!auth.currentUser) return alert("يجب تسجيل الدخول أولاً");
             const name = document.getElementById('p-name').value;
             const price = document.getElementById('p-price').value;
             const img = document.getElementById('p-image').value;
             const desc = document.getElementById('p-desc').value;
-            const colors = document.getElementById('p-colors').value;
-            if(!name || !price) return alert("يرجى إدخال البيانات الأساسية");
-            products.push({ id: Date.now(), name, price: parseInt(price), img, desc, colors: colors.split(',').map(c => c.trim()) });
-            localStorage.setItem('watches_db', JSON.stringify(products));
-            renderProducts();
-            alert("تمت إضافة الساعة للمتجر بنجاح ✨");
-        }
 
-        function deleteProduct(id) {
-            if(confirm("هل أنت متأكد من حذف المنتج؟")) {
-                products = products.filter(p => p.id !== id);
-                localStorage.setItem('watches_db', JSON.stringify(products));
-                renderProducts();
+            if(!name || !price) return alert("يرجى إكمال البيانات الأساسية");
+
+            try {
+                await db.collection(PRODUCTS_COL_PATH).add({
+                    name, 
+                    price: parseInt(price), 
+                    img, 
+                    desc,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert("تمت الإضافة بنجاح");
+                // Clear fields
+                document.getElementById('p-name').value = '';
+                document.getElementById('p-price').value = '';
+            } catch (err) {
+                alert("فشل في الإضافة: " + err.message);
             }
         }
 
-        function saveSettings() {
-            settings = { token: document.getElementById('tg-token').value, chatid: document.getElementById('tg-chatid').value, chatid2: document.getElementById('tg-chatid2').value };
-            localStorage.setItem('tg_config', JSON.stringify(settings));
-            alert("تم حفظ إعدادات الربط بنجاح");
+        async function deleteProductFromCloud(id) {
+            if (!auth.currentUser) return;
+            if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+                try {
+                    await db.collection(PRODUCTS_COL_PATH).doc(id).delete();
+                } catch (err) {
+                    alert("فشل في الحذف: " + err.message);
+                }
+            }
+        }
+
+        async function saveSettingsToCloud() {
+            if (!auth.currentUser) return;
+            const token = document.getElementById('tg-token').value;
+            const chatid = document.getElementById('tg-chatid').value;
+            try {
+                await db.doc(CONFIG_DOC_PATH).set({ token, chatid }, { merge: true });
+                alert("تم حفظ إعدادات البوت");
+            } catch (err) {
+                alert("فشل حفظ الإعدادات: " + err.message);
+            }
         }
 
         function openProduct(id) {
-            const p = products.find(x => x.id == id);
-            selectedColor = p.colors[0] || "#000";
-            currentDeliveryPrice = 0;
+            const p = products.find(x => x.id === id);
             const content = document.getElementById('modal-content');
-            
             content.innerHTML = `
-                <div class="flex flex-col gap-6">
-                    <div class="relative group">
-                        <img src="${p.img}" class="w-full rounded-[30px] shadow-2xl transition duration-500 group-hover:scale-[1.02]">
-                    </div>
-                    <div class="bg-gray-50 p-6 rounded-[25px] border border-gray-100 italic text-sm text-gray-500 leading-relaxed">
-                        "${p.desc}
-                    </div>
-                </div>
+                <img src="${p.img || 'https://via.placeholder.com/400x400'}" class="w-full rounded-2xl shadow-lg">
                 <div>
-                    <h2 class="text-4xl font-black mb-2 text-gray-800">${p.name}</h2>
-                    <div class="text-3xl text-yellow-700 font-bold mb-8">${p.price} <span class="text-sm">دج</span></div>
-                    
-                    <div class="mb-8">
-                        <span class="block text-sm font-bold text-gray-400 mb-4 tracking-widest uppercase">الألوان المتاحة</span>
-                        <div class="flex gap-4">
-                            ${p.colors.map((c, i) => `<div onclick="selectColor(this, '${c}')" class="color-dot ${i === 0 ? 'active' : ''}" style="background-color: ${c}"></div>`).join('')}
-                        </div>
-                    </div>
-
-                    <form onsubmit="confirmOrder(event, ${p.id})" class="space-y-5 border-t border-gray-100 pt-8">
-                        <input type="text" id="u-name" required placeholder="اسمك الكامل هنا" class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-yellow-600 transition-all">
-                        <input type="tel" id="u-phone" required placeholder="رقم هاتفك للتواصل" class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none text-left" dir="ltr">
-                        
-                        <div class="relative">
-                            <select id="u-wilaya" required class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none appearance-none cursor-pointer focus:ring-2 focus:ring-yellow-600" onchange="updateTotal(${p.price})">
-                                <option value="">اختر ولايتك (58 ولاية)</option>
-                                ${WILAYAS_DATA.map(w => `<option value="${w.name}" data-price="${w.price}">${w.name}</option>`).join('')}
-                            </select>
-                            <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">▼</div>
-                        </div>
-
-                        <input type="text" id="u-commune" required placeholder="العنوان بالتفصيل (البلدية/الشارع)" class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-yellow-600">
-                        
-                        <div class="flex items-center justify-between p-4 bg-gray-900 text-white rounded-2xl">
-                            <span class="font-bold">الكمية المطلوبة:</span>
-                            <div class="flex items-center gap-4">
-                                <button type="button" onclick="changeQty(-1, ${p.price})" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 font-bold">-</button>
-                                <span id="u-qty-display" class="w-6 text-center font-bold">1</span>
-                                <button type="button" onclick="changeQty(1, ${p.price})" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 font-bold">+</button>
-                            </div>
-                        </div>
-
-                        <div class="bg-gray-50 p-6 rounded-3xl space-y-3">
-                            <div class="flex justify-between text-sm text-gray-500"><span>تكلفة التوصيل للبيت:</span> <span id="delivery-cost">0 دج</span></div>
-                            <div class="flex justify-between font-black text-2xl pt-3 border-t border-gray-200 text-gray-900"><span>الإجمالي:</span> <span id="total-price">${p.price} دج</span></div>
-                        </div>
-
-                        <button type="submit" id="orderBtn" class="w-full bg-yellow-600 text-white py-5 rounded-2xl font-bold text-xl shadow-2xl shadow-yellow-600/30 hover:bg-yellow-700 hover:-translate-y-1 transition-all duration-300">إرسال الطلب الآن</button>
-                        <p class="text-center text-[10px] text-gray-400">الدفع يكون نقداً عند باب منزلك بعد فحص الساعة</p>
+                    <h2 class="text-2xl font-bold mb-4">${p.name}</h2>
+                    <p class="text-gray-600 mb-6">${p.desc || 'لا يوجد وصف متاح.'}</p>
+                    <p class="text-yellow-700 text-xl font-bold mb-6">${p.price} دج</p>
+                    <form onsubmit="confirmOrder(event, '${p.id}')" class="space-y-4">
+                        <input type="text" id="u-name" required placeholder="الاسم الكامل" class="w-full p-4 bg-gray-100 rounded-xl border-none outline-yellow-600">
+                        <input type="tel" id="u-phone" required placeholder="رقم الهاتف (الجزائر)" class="w-full p-4 bg-gray-100 rounded-xl border-none outline-yellow-600">
+                        <button type="submit" id="orderBtn" class="w-full bg-yellow-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-yellow-700 transition">إرسال الطلب الآن</button>
                     </form>
                 </div>
             `;
             document.getElementById('modal').classList.remove('hidden');
         }
 
-        let currentQty = 1;
-        function changeQty(val, price) {
-            currentQty = Math.max(1, currentQty + val);
-            document.getElementById('u-qty-display').innerText = currentQty;
-            updateTotal(price);
-        }
-
-        function selectColor(el, color) {
-            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-            el.classList.add('active');
-            selectedColor = color;
-        }
-
-        function updateTotal(price) {
-            const wilayaSelect = document.getElementById('u-wilaya');
-            const selectedOption = wilayaSelect.options[wilayaSelect.selectedIndex];
-            currentDeliveryPrice = parseInt(selectedOption.getAttribute('data-price')) || 0;
-            
-            document.getElementById('delivery-cost').innerText = currentDeliveryPrice + " دج";
-            document.getElementById('total-price').innerText = (price * currentQty + currentDeliveryPrice) + " دج";
-        }
-
-        function closeModal() { 
-            document.getElementById('modal').classList.add('hidden'); 
-            currentQty = 1; 
-        }
-
         async function confirmOrder(e, pid) {
             e.preventDefault();
-            if(!settings.token || !settings.chatid) return alert("يرجى ضبط إعدادات التليجرام أولاً");
-
-            const p = products.find(x => x.id == pid);
-            const msg = `
-🆕 طــــــــلب جديــــــــد 🛍️
-━━━━━━━━━━━━━━━
-⌚ المنتج: ${p.name}
-🎨 اللون: ${selectedColor}
-🔢 الكمية: ${currentQty}
-👤 الاسم: ${document.getElementById('u-name').value}
-📞 الهاتف: ${document.getElementById('u-phone').value}
-📍 الولاية: ${document.getElementById('u-wilaya').value}
-🏙️ العنوان: ${document.getElementById('u-commune').value}
-🚚 التوصيل: ${currentDeliveryPrice} دج
-💵 الإجمالي: ${document.getElementById('total-price').innerText}
-━━━━━━━━━━━━━━━
-            `;
-
             const btn = document.getElementById('orderBtn');
             btn.disabled = true;
-            btn.innerText = "جاري إرسال الطلب...";
+            btn.innerHTML = "جاري الإرسال...";
+
+            const p = products.find(x => x.id === pid);
+            const name = document.getElementById('u-name').value;
+            const phone = document.getElementById('u-phone').value;
+            
+            const msg = `🛍️ *طلب جديد من المتجر*:\n\n` +
+                        `📦 *المنتج:* ${p.name}\n` +
+                        `💰 *السعر:* ${p.price} دج\n\n` +
+                        `👤 *العميل:* ${name}\n` +
+                        `📞 *الهاتف:* ${phone}`;
+            
+            if(!settings.token || !settings.chatid) {
+                btn.disabled = false;
+                btn.innerHTML = "تأكيد الطلب";
+                return alert("خطأ: إعدادات البوت غير مكتملة في لوحة التحكم.");
+            }
 
             try {
-                const urls = [
-                    `https://api.telegram.org/bot${settings.token}/sendMessage?chat_id=${settings.chatid}&text=${encodeURIComponent(msg)}`
-                ];
-                if(settings.chatid2) urls.push(`https://api.telegram.org/bot${settings.token}/sendMessage?chat_id=${settings.chatid2}&text=${encodeURIComponent(msg)}`);
-
-                await Promise.all(urls.map(url => fetch(url)));
-
+                await fetch(`https://api.telegram.org/bot${settings.token}/sendMessage?chat_id=${settings.chatid}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+                alert("تم استلام طلبك بنجاح! سنتصل بك قريباً.");
                 closeModal();
-                document.getElementById('success-notif').classList.remove('hidden');
-                setTimeout(() => document.getElementById('success-notif').classList.add('hidden'), 5000);
-            } catch (err) { alert("حدث خطأ أثناء الإرسال"); } finally { btn.disabled = false; btn.innerText = "إرسال الطلب الآن"; }
+            } catch (err) { 
+                alert("عذراً، حدث خطأ أثناء إرسال الطلب. حاول مجدداً."); 
+            } finally {
+                btn.disabled = false;
+            }
         }
 
-        renderProducts();
+        function showAdminLogin() { document.getElementById('admin-login').classList.remove('hidden'); }
+        function hideAdminLogin() { document.getElementById('admin-login').classList.add('hidden'); }
+        function checkPassword() { if(document.getElementById('admin-password').value === ADMIN_PASS) { hideAdminLogin(); document.getElementById('admin-panel').classList.remove('hidden'); } else { alert("كلمة المرور خاطئة"); } }
+        function logoutAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+        let lClicks = 0; function handleLogoClick(e) { if(Date.now() - lClicks < 400) showAdminLogin(); lClicks = Date.now(); }
+
+        init();
     </script>
 </body>
-
 </html>
